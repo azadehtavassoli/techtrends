@@ -4,12 +4,20 @@ from flask import Flask, jsonify, json, render_template, request, url_for, redir
 from werkzeug.exceptions import abort
 import logging
 
+import os 
+
 connection_counter = 0  #counter to count the connections to db
 # Function to get a database connection.
 # This function connects to database with the name `database.db`
 def get_db_connection():
     global connection_counter
-    connection = sqlite3.connect('database.db')
+    try:
+        if os.path.exists("database.db"):
+            connection = sqlite3.connect("database.db")
+        else:
+            raise RuntimeError('Database error! file database.db not found')
+    except sqlite3.OperationalError:
+        logging.error('Delete Database.db and run python init_db.py.')
     connection.row_factory = sqlite3.Row
     connection_counter = connection_counter + 1
     return connection
@@ -41,7 +49,7 @@ def index():
 def post(post_id):
     post = get_post(post_id)
     if post is None:
-      app.logger.debug(f"Article with ID {post['ID']} not found, page 404 accessed.")
+      app.logger.error(f"Article with ID {post['ID']} not found, page 404 accessed.")
       return render_template('404.html'), 404
     else:
       app.logger.debug(f"Article with title \"{post['title']}\" is retrieved.")
@@ -78,14 +86,25 @@ def create():
 #   - A JSON response containing the result: OK - healthy message
 @app.route('/healthz')
 def healthcheck():
-    response = app.response_class(
-            response=json.dumps({"result":"OK - healthy"}),
-            status=200,
-            mimetype='application/json'
-    )   
-    app.logger.info('healthz request successfull')
-    app.logger.debug('DEBUG message')
-    return response
+    try:
+        connection = get_db_connection()
+        connection.cursor()
+        connection.execute("SELECT * FROM posts")
+        connection.close()
+        response = app.response_class(
+                response=json.dumps({"result":"OK - healthy"}),
+                status=200,
+                mimetype='application/json'
+        )   
+        app.logger.info('healthz request successfull')
+        return response
+    except Exception:
+        response = app.response_class(
+                response=json.dumps({"result":"ERROR - unhealthy"}),
+                status=500,
+                mimetype='application/json'
+        )   
+        return response
 # Defines the metrics endpoints - returns
 #   - An HTTP 200 status code
 #   - A JSON response with the following metrics:
