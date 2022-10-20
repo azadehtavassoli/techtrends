@@ -8,10 +8,10 @@ Diagram with the sitemap of the web applciation
 
 Where:
 
-    About page - presents a quick overview of the TechTrends site
-    Index page - contains the content of the main page, with a list of all available posts within TechTrends
-    New Post page - provides a form to submit a new post
-    404 page - is rendered when an article ID does not exist is accessed
+* About page - presents a quick overview of the TechTrends site
+* Index page - contains the content of the main page, with a list of all available posts within TechTrends
+* New Post page - provides a form to submit a new post
+* 404 page - is rendered when an article ID does not exist is accessed
 
 And lastly, the first prototype of the application is storing and accessing posts from the "POSTS" SQL table. A post entry contains the post ID (primary key), creation timestamp, title, and content. The "POSTS" table schema can be examined below:
 
