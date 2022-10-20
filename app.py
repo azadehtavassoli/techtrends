@@ -4,11 +4,14 @@ from flask import Flask, jsonify, json, render_template, request, url_for, redir
 from werkzeug.exceptions import abort
 import logging
 
+connection_counter = 0  #counter to count the connections to db
 # Function to get a database connection.
 # This function connects to database with the name `database.db`
 def get_db_connection():
+    global connection_counter
     connection = sqlite3.connect('database.db')
     connection.row_factory = sqlite3.Row
+    connection_counter = connection_counter + 1
     return connection
 
 # Function to get a post using its ID
@@ -81,14 +84,18 @@ def healthcheck():
     return response
 # Defines the metrics endpoints - returns
 #   - An HTTP 200 status code
-#   - A JSON response with the following metrics (Hardcoded for now):
+#   - A JSON response with the following metrics:
 #       - Total amount of posts in the database
 #       - Total amount of connections to the database. For example, 
 #         accessing an article will query the database, hence will count as a connection 
 @app.route('/metrics')
 def metrics():
+    connection = get_db_connection()
+    posts = connection.execute('SELECT * FROM posts').fetchall()
+    connection.close()
+    post_count = len(posts)
     response = app.response_class(
-            response=json.dumps({"status":"success","code":0,"data":{"db_connection_count": 1, "post_count": 7}}),
+            response=json.dumps({"status":"success","code":0,"data":{"db_connection_count": connection_counter, "post_count": post_count}}),
             status=200,
             mimetype='application/json'
     )
@@ -98,5 +105,5 @@ def metrics():
 if __name__ == "__main__":
     ## stream logs to app.log file
     logging.basicConfig(filename='app.log',level=logging.DEBUG)
-    
+
     app.run(host='0.0.0.0', port='3111')
