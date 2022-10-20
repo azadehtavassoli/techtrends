@@ -40,13 +40,16 @@ def index():
 def post(post_id):
     post = get_post(post_id)
     if post is None:
+      app.logger.debug(f"Article with ID {post['ID']} not found, page 404 accessed.")
       return render_template('404.html'), 404
     else:
+      app.logger.debug(f"Article with title \"{post['title']}\" is retrieved.")
       return render_template('post.html', post=post)
 
 # Define the About Us page
 @app.route('/about')
 def about():
+    app.logger.info(f"About request successful")
     return render_template('about.html')
 
 # Define the post creation functionality 
@@ -64,7 +67,7 @@ def create():
                          (title, content))
             connection.commit()
             connection.close()
-
+            app.logger.debug(f"A new article with title \"{title}\" is added")
             return redirect(url_for('index'))
 
     return render_template('create.html')
