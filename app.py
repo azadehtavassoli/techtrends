@@ -32,6 +32,7 @@ def index():
     connection = get_db_connection()
     posts = connection.execute('SELECT * FROM posts').fetchall()
     connection.close()
+    app.logger.info('index (main page) request successfull')
     return render_template('index.html', posts=posts)
 
 # Define how each individual article is rendered 
@@ -82,7 +83,7 @@ def healthcheck():
             status=200,
             mimetype='application/json'
     )   
-    app.logger.info('Status request successfull')
+    app.logger.info('healthz request successfull')
     app.logger.debug('DEBUG message')
     return response
 # Defines the metrics endpoints - returns
@@ -102,6 +103,7 @@ def metrics():
             status=200,
             mimetype='application/json'
     )
+    app.logger.info('metrics request successfull')
     return response  
 
 # start the application on port 3111
