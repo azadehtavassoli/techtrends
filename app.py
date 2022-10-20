@@ -65,6 +65,32 @@ def create():
 
     return render_template('create.html')
 
+# Defines the healthz endpoint - returning:
+#   - An HTTP 200 status code
+#   - A JSON response containing the result: OK - healthy message
+@app.route('healthz')
+def healthcheck():
+    response = app.response_class(
+            response=json.dumps({"result":"OK - healthy"}),
+            status=200,
+            mimetype='application/json'
+    )   
+
+# Defines the metrics endpoints - returns
+#   - An HTTP 200 status code
+#   - A JSON response with the following metrics (Hardcoded for now):
+#       - Total amount of posts in the database
+#       - Total amount of connections to the database. For example, 
+#         accessing an article will query the database, hence will count as a connection 
+@app.route('/metrics')
+def metrics():
+    response = app.response_class(
+            response=json.dumps({"status":"success","code":0,"data":{"db_connection_count": 1, "post_count": 7}}),
+            status=200,
+            mimetype='application/json'
+    )
+    return response  
+
 # start the application on port 3111
 if __name__ == "__main__":
    app.run(host='0.0.0.0', port='3111')
