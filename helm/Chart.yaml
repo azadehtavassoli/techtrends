@@ -1,0 +1,9 @@
+apiVersion: v1
+name: techtrends
+description: Install a techtrends APP deployment
+keywords:
+- techtrends
+version: 1.0.0
+maintainers:
+- name: Azadeh Tavassoli 
+  email: azadeh.tavassoli@gmail.com
