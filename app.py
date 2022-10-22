@@ -10,9 +10,12 @@ import os
 app = Flask(__name__)
 app.config['connection_counter'] = 0
 
-# Function to get a database connection.
-# This function connects to database with the name `database.db`
+
 def get_db_connection():
+    ''' 
+    Function to get a database connection. 
+    This function connects to database with the name database.db 
+    '''
     try:
         if os.path.exists("database.db"):
             connection = sqlite3.connect("database.db")
@@ -24,27 +27,32 @@ def get_db_connection():
     app.config['connection_counter'] = app.config['connection_counter'] + 1
     return connection
 
-# Function to get a post using its ID
 def get_post(post_id):
+    '''
+    Function to get a post using its ID
+    '''
     connection = get_db_connection()
     post = connection.execute('SELECT * FROM posts WHERE id = ?',
                         (post_id,)).fetchone()
     connection.close()
     return post
 
-# Define the main route of the web application 
-@app.route('/')
 def index():
+    '''
+    Define the main route of the web application @app.route('/')
+    '''
     connection = get_db_connection()
     posts = connection.execute('SELECT * FROM posts').fetchall()
     connection.close()
     app.logger.info('index (main page) request successfull')
     return render_template('index.html', posts=posts)
 
-# Define how each individual article is rendered 
-# If the post ID is not found a 404 page is shown
 @app.route('/<int:post_id>')
 def post(post_id):
+    '''
+    Define how each individual article is rendered 
+    If the post ID is not found a 404 page is shown
+    '''
     post = get_post(post_id)
     if post is None:
       app.logger.error(f"Article with ID {post['ID']} not found, page 404 accessed.")
@@ -53,15 +61,19 @@ def post(post_id):
       app.logger.debug(f"Article with title \"{post['title']}\" is retrieved.")
       return render_template('post.html', post=post)
 
-# Define the About Us page
 @app.route('/about')
 def about():
+    '''
+    Define the About Us page
+    '''
     app.logger.info(f"About request successful")
     return render_template('about.html')
 
-# Define the post creation functionality 
 @app.route('/create', methods=('GET', 'POST'))
 def create():
+    '''
+    Define the post creation functionality 
+    '''
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
@@ -79,11 +91,13 @@ def create():
 
     return render_template('create.html')
 
-# Defines the healthz endpoint - returning:
-#   - An HTTP 200 status code
-#   - A JSON response containing the result: OK - healthy message
 @app.route('/healthz')
 def healthcheck():
+    '''
+    Defines the healthz endpoint - returning:
+       - An HTTP 200 status code
+       - A JSON response containing the result: OK - healthy message
+    '''
     try:
         connection = get_db_connection()
         connection.cursor()
@@ -103,14 +117,17 @@ def healthcheck():
                 mimetype='application/json'
         )   
         return response
-# Defines the metrics endpoints - returns
-#   - An HTTP 200 status code
-#   - A JSON response with the following metrics:
-#       - Total amount of posts in the database
-#       - Total amount of connections to the database. For example, 
-#         accessing an article will query the database, hence will count as a connection 
+
 @app.route('/metrics')
 def metrics():
+    '''
+    Defines the metrics endpoints - returns
+       - An HTTP 200 status code
+       - A JSON response with the following metrics:
+           - Total amount of posts in the database
+           - Total amount of connections to the database. For example, 
+             accessing an article will query the database, hence will count as a connection 
+    '''
     connection = get_db_connection()
     posts = connection.execute('SELECT * FROM posts').fetchall()
     connection.close()
