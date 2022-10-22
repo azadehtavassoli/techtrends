@@ -5,6 +5,7 @@ from werkzeug.exceptions import abort
 import logging
 
 import os 
+import sys
 
 # Define the Flask application
 app = Flask(__name__)
@@ -143,7 +144,14 @@ def metrics():
 
 # start the application on port 3111
 if __name__ == "__main__":
+
+    # set logger to handle STDOUT and STDERR 
+    stdout_handler =  logging.StreamHandler(sys.stdout)# stdout handler `
+    stderr_handler =  logging.FileHandler(filename='app.log')# stderr handler 
+    handlers = [stderr_handler, stdout_handler]
+    # format output
+    format_output = '%(asctime)s %(message)s'
     ## stream logs to app.log file
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(handlers=handlers, format=format_output,level=logging.DEBUG)
 
     app.run(host='0.0.0.0', port='3111')

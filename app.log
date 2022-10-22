@@ -1,17 +1,6 @@
-WARNING:werkzeug: * Running on all addresses.
+2022-10-22 22:48:48,015  * Running on all addresses.
    WARNING: This is a development server. Do not use it in a production deployment.
-INFO:werkzeug: * Running on http://192.168.178.32:3111/ (Press CTRL+C to quit)
-INFO:werkzeug:127.0.0.1 - - [20/Oct/2022 19:20:17] "GET / HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [20/Oct/2022 19:20:17] "[36mGET /static/css/main.css HTTP/1.1[0m" 304 -
-DEBUG:app:Article with title "CNCF Cloud Native Interactive Landscape" is retrieved.
-INFO:werkzeug:127.0.0.1 - - [20/Oct/2022 19:20:19] "GET /4 HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [20/Oct/2022 19:20:19] "[36mGET /static/css/main.css HTTP/1.1[0m" 304 -
-DEBUG:app:Article with title "CNCF Cloud Native Definition v1.0" is retrieved.
-INFO:werkzeug:127.0.0.1 - - [20/Oct/2022 19:20:22] "GET /5 HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [20/Oct/2022 19:20:22] "[36mGET /static/css/main.css HTTP/1.1[0m" 304 -
-INFO:werkzeug:127.0.0.1 - - [20/Oct/2022 19:20:27] "GET /create HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [20/Oct/2022 19:20:27] "[36mGET /static/css/main.css HTTP/1.1[0m" 304 -
-DEBUG:app:A new article with title "A Good book to read" is added
-INFO:werkzeug:127.0.0.1 - - [20/Oct/2022 19:20:47] "[32mPOST /create HTTP/1.1[0m" 302 -
-INFO:werkzeug:127.0.0.1 - - [20/Oct/2022 19:20:47] "GET / HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [20/Oct/2022 19:20:47] "[36mGET /static/css/main.css HTTP/1.1[0m" 304 -
+2022-10-22 22:48:48,015  * Running on http://192.168.178.32:3111/ (Press CTRL+C to quit)
+2022-10-22 22:49:09,663 index (main page) request successfull
+2022-10-22 22:49:09,679 127.0.0.1 - - [22/Oct/2022 22:49:09] "GET / HTTP/1.1" 200 -
+2022-10-22 22:49:09,704 127.0.0.1 - - [22/Oct/2022 22:49:09] "[36mGET /static/css/main.css HTTP/1.1[0m" 304 -
