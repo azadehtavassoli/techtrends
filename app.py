@@ -6,11 +6,13 @@ import logging
 
 import os 
 
-connection_counter = 0  #counter to count the connections to db
+# Define the Flask application
+app = Flask(__name__)
+app.config['connection_counter'] = 0
+
 # Function to get a database connection.
 # This function connects to database with the name `database.db`
 def get_db_connection():
-    global connection_counter
     try:
         if os.path.exists("database.db"):
             connection = sqlite3.connect("database.db")
@@ -19,7 +21,7 @@ def get_db_connection():
     except sqlite3.OperationalError:
         logging.error('Delete Database.db and run python init_db.py.')
     connection.row_factory = sqlite3.Row
-    connection_counter = connection_counter + 1
+    app.config['connection_counter'] = app.config['connection_counter'] + 1
     return connection
 
 # Function to get a post using its ID
@@ -29,10 +31,6 @@ def get_post(post_id):
                         (post_id,)).fetchone()
     connection.close()
     return post
-
-# Define the Flask application
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your secret key'
 
 # Define the main route of the web application 
 @app.route('/')
@@ -118,7 +116,7 @@ def metrics():
     connection.close()
     post_count = len(posts)
     response = app.response_class(
-            response=json.dumps({"status":"success","code":0,"data":{"db_connection_count": connection_counter, "post_count": post_count}}),
+            response=json.dumps({"status":"success","code":0,"data":{"db_connection_count": app.config['connection_counter'], "post_count": post_count}}),
             status=200,
             mimetype='application/json'
     )
