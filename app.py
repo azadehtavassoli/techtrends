@@ -37,6 +37,7 @@ def get_post(post_id):
     connection.close()
     return post
 
+@app.route('/')
 def index():
     '''
     Define the main route of the web application @app.route('/')
